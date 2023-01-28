@@ -185,27 +185,90 @@ function openDynamicMenu(vehicle)
 	_menuPool:ControlDisablingEnabled(false);
 end
 
-Citizen.CreateThread(function()
-    while true do
-        Citizen.Wait(0)
-		_menuPool:ProcessMenus()
+-- Citizen.CreateThread(function()
+--     while true do
+--         Citizen.Wait(0)
+-- 		_menuPool:ProcessMenus()
 		
+-- 		local ped = GetPlayerPed(-1)
+-- 		local vehicle = GetVehiclePedIsIn(ped, false)
+		
+-- 		if IsControlJustReleased(1, Config.menuKey) then
+-- 			if IsPedInAnyVehicle(ped, false) and GetPedInVehicleSeat(vehicle, -1) == ped then
+-- 				print("Open Menu!")
+-- 				collectgarbage()
+-- 				openDynamicMenu(vehicle)
+-- 				vehMenu:Visible(not vehMenu:Visible())
+-- 			end
+--         end
+		
+-- 		if IsPedInAnyVehicle(ped, false) == false then
+-- 			if vehMenu ~= nil and vehMenu:Visible() then
+-- 				vehMenu:Visible(false)
+-- 			end
+-- 		end
+--     end
+-- end)
+
+function IsInVehicle()
+	local playerPed = PlayerPedId()
+
+	if IsPedSittingInAnyVehicle(playerPed) then
+		local vehicle = GetVehiclePedIsIn(playerPed, false)
+
+		if GetPedInVehicleSeat(vehicle, -1) == playerPed then
+			return true
+		end
+	end
+
+	return false
+end
+
+Citizen.CreateThread(function()
+	while true do
+		Citizen.Wait(0)
+		_menuPool:ProcessMenus()
+		local playerPed = PlayerPedId()
+		local coords = GetEntityCoords(playerPed)
+		local canSleep = true
 		local ped = GetPlayerPed(-1)
 		local vehicle = GetVehiclePedIsIn(ped, false)
-		
-		if IsControlJustReleased(1, Config.menuKey) then
-			if IsPedInAnyVehicle(ped, false) and GetPedInVehicleSeat(vehicle, -1) == ped then
-				print("Open Menu!")
-				collectgarbage()
-				openDynamicMenu(vehicle)
-				vehMenu:Visible(not vehMenu:Visible())
+
+		if IsInVehicle() then
+
+			for i=1, #Config.Locations, 1 do
+				local carExtraLocation = Config.Locations[i]
+				local distance = GetDistanceBetweenCoords(coords, carExtraLocation, true)
+
+				if distance < 50 then
+					DrawMarker(27, carExtraLocation, 0, 0, 0, 0, 0, 0, 5.0, 5.0, 2.0, 0, 157, 0, 155, 0, 0, 2, 0, 0, 0, 0)
+
+					canSleep = false
+				end
+
+				if distance < 5 then
+					canSleep = false
+
+					ESX.ShowHelpNotification('Press [E] To access the menu')
+
+					if IsControlJustReleased(1, 201) then
+						local vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
+						collectgarbage()
+						openDynamicMenu(vehicle)
+						vehMenu:Visible(not vehMenu:Visible())
+					end
+				end
 			end
-        end
-		
-		if IsPedInAnyVehicle(ped, false) == false then
+
+			if canSleep then
+				Citizen.Wait(500)
+			end
+
+		else
 			if vehMenu ~= nil and vehMenu:Visible() then
 				vehMenu:Visible(false)
 			end
+			Citizen.Wait(500)
 		end
-    end
+	end
 end)

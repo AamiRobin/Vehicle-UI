@@ -5,6 +5,11 @@ Config.mBG = {'shopui_title_ie_modgarage','shopui_title_ie_modgarage'} -- intera
 
 Config.menuKey = 344
 
+Config.Locations = {
+    vector3(458.55651, -991.1723, 25.699966),
+    vector3(-356.58, -160.271, 38.72863),
+}
+
 --- Don't touch :)
 --- You can touch if you want to change the language?
 Config.doors = {
