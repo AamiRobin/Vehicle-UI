@@ -235,24 +235,20 @@ Citizen.CreateThread(function()
 		local vehicle = GetVehiclePedIsIn(ped, false)
 
 		if IsInVehicle() then
-
 			for i=1, #Config.Locations, 1 do
 				local carExtraLocation = Config.Locations[i]
 				local distance = GetDistanceBetweenCoords(coords, carExtraLocation, true)
 
 				if distance < 50 then
 					DrawMarker(27, carExtraLocation, 0, 0, 0, 0, 0, 0, 5.0, 5.0, 2.0, 0, 157, 0, 155, 0, 0, 2, 0, 0, 0, 0)
-
 					canSleep = false
 				end
 
 				if distance < 5 then
 					canSleep = false
-
 					ESX.ShowHelpNotification('Press [E] To access the menu')
-
-					if IsControlJustReleased(1, 201) then
-						local vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
+					if IsControlJustReleased(1, Config.menuKey) then
+						print("Open Menu!")
 						collectgarbage()
 						openDynamicMenu(vehicle)
 						vehMenu:Visible(not vehMenu:Visible())

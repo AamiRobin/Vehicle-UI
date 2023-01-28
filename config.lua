@@ -3,11 +3,11 @@ Config = {}
 Config.mTitle = "Vehicle Menu"
 Config.mBG = {'shopui_title_ie_modgarage','shopui_title_ie_modgarage'} -- interaction_bgd = Blue, gradient_bgd = Black.
 
-Config.menuKey = 344
+Config.menuKey = 38
 
 Config.Locations = {
-    vector3(458.55651, -991.1723, 25.699966),
-    vector3(-356.58, -160.271, 38.72863),
+    vector3(458.55651, -991.1723, 24.699966),
+    vector3(-356.58, -160.271, 37.72863),
 }
 
 --- Don't touch :)
